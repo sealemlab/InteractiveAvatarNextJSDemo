@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "node_modules/next/dist/bin/next dev",
+    "dev": "node_modules/next/dist/bin/next dev -p 6001",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 6001",
     "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
   },
   "dependencies": {
