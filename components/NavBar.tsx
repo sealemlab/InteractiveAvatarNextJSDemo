@@ -1,7 +1,14 @@
-'use client';
+"use client";
 
-import { Link, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/react';
-import { GithubIcon, AigreeLogo } from './Icons';
+import {
+  Link,
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+} from "@nextui-org/react";
+
+import { AigreeLogo } from "./Icons";
 // import { ThemeSwitch } from './ThemeSwitch';
 
 export default function NavBar() {
@@ -11,7 +18,6 @@ export default function NavBar() {
         <Link isExternal aria-label="Aigree" href="">
           <AigreeLogo />
         </Link>
-       
       </NavbarBrand>
       <NavbarContent justify="center">
         <NavbarItem className="flex flex-row items-center gap-4">

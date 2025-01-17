@@ -1,14 +1,15 @@
 export const AVATARS = [
   {
-    avatar_id: '6b321163a4ec4ad3a5bdd85f67bf09a1',
-    name: 'CC',
-    avatar: 'https://heroui.com/images/album-cover.png'
+    avatar_id: "6b321163a4ec4ad3a5bdd85f67bf09a1",
+    name: "CC",
+    avatar: "https://heroui.com/images/album-cover.png",
   },
   {
-    avatar_id: 'SilasHR_public',
-    name: 'SilasHR_public',
-    avatar: 'https://app.requestly.io/delay/5000/https://heroui.com/images/hero-card-complete.jpeg'
-  }
+    avatar_id: "SilasHR_public",
+    name: "SilasHR_public",
+    avatar:
+      "https://app.requestly.io/delay/5000/https://heroui.com/images/hero-card-complete.jpeg",
+  },
   // {
   //   avatar_id: "Eric_public_pro2_20230608",
   //   name: "Edward in Blue Shirt",
@@ -33,11 +34,11 @@ export const AVATARS = [
 
 export const STT_LANGUAGE_LIST = [
   // { label: 'Bulgarian', value: 'bg', key: 'bg' },
-  { label: 'Chinese', value: 'zh', key: 'zh' },
+  { label: "Chinese", value: "zh", key: "zh" },
   // { label: 'Czech', value: 'cs', key: 'cs' },
   // { label: 'Danish', value: 'da', key: 'da' },
   // { label: 'Dutch', value: 'nl', key: 'nl' },
-  { label: 'English', value: 'en', key: 'en' }
+  { label: "English", value: "en", key: "en" },
   // { label: 'Finnish', value: 'fi', key: 'fi' },
   // { label: 'French', value: 'fr', key: 'fr' },
   // { label: 'German', value: 'de', key: 'de' },

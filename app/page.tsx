@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import InteractiveAvatar from '@/components/InteractiveAvatar';
+import InteractiveAvatar from "@/components/InteractiveAvatar";
 export default function App() {
   return (
     <div className="h-screen flex flex-col">
