@@ -2,6 +2,8 @@ import { Input, Spinner, Tooltip } from "@nextui-org/react";
 import { PaperPlaneRight } from "@phosphor-icons/react";
 import clsx from "clsx";
 
+import { useI18n } from "@/app/lib/i18n";
+
 interface StreamingAvatarTextInputProps {
   label: string;
   placeholder: string;
@@ -23,6 +25,8 @@ export default function InteractiveAvatarTextInput({
   disabled = false,
   loading = false,
 }: StreamingAvatarTextInputProps) {
+  const { t } = useI18n();
+
   function handleSubmit() {
     if (input.trim() === "") {
       return;
@@ -36,7 +40,7 @@ export default function InteractiveAvatarTextInput({
       endContent={
         <div className="flex flex-row items-center h-full">
           {endContent}
-          <Tooltip content="Send message">
+          <Tooltip content={t("nav.send")}>
             {loading ? (
               <Spinner
                 className="text-indigo-300 hover:text-indigo-200"

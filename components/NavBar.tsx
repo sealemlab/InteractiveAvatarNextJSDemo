@@ -9,7 +9,7 @@ import {
 } from "@nextui-org/react";
 
 import { AigreeLogo } from "./Icons";
-// import { ThemeSwitch } from './ThemeSwitch';
+import LanguageSwitch from "./LanguageSwitch";
 
 export default function NavBar() {
   return (
@@ -58,7 +58,7 @@ export default function NavBar() {
             <GithubIcon className="text-default-500" />
             SDK
           </Link> */}
-          {/* <ThemeSwitch /> */}
+          <LanguageSwitch />
         </NavbarItem>
       </NavbarContent>
     </Navbar>

@@ -1,22 +1,18 @@
 import "@/styles/globals.css";
 import clsx from "clsx";
 import { Metadata, Viewport } from "next";
+import { Belanosima } from "next/font/google";
 
 import { Providers } from "./providers";
 
 import NavBar from "@/components/NavBar";
 
-// import { Fira_Code as FontMono, Inter as FontSans } from 'next/font/google';
-
-// const fontSans = FontSans({
-//   subsets: ['latin'],
-//   variable: '--font-sans'
-// });
-
-// const fontMono = FontMono({
-//   subsets: ['latin'],
-//   variable: '--font-geist-mono'
-// });
+const belanosima = Belanosima({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-belanosima",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -41,10 +37,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    // className={`${fontSans.variable} ${fontMono.variable} font-sans`}
-    <html suppressHydrationWarning lang="en">
+    <html
+      suppressHydrationWarning
+      className={clsx(belanosima.variable)}
+      lang="en"
+    >
       <head />
-      <body className={clsx("min-h-screen bg-background antialiased")}>
+      <body
+        className={clsx(
+          "min-h-screen bg-background antialiased font-belanosima",
+        )}
+      >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <main className="relative flex flex-col h-screen">
             <NavBar />

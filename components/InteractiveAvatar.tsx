@@ -1,12 +1,5 @@
 import type { StartAvatarResponse } from "@heygen/streaming-avatar";
 
-import { Belanosima } from "next/font/google";
-
-const belanosima = Belanosima({
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-});
-
 import StreamingAvatar, {
   AvatarQuality,
   StreamingEvents,
@@ -34,19 +27,36 @@ import { useMemoizedFn, usePrevious } from "ahooks";
 
 import InteractiveAvatarTextInput from "./InteractiveAvatarTextInput";
 
+import { useI18n } from "@/app/lib/i18n";
 import { AVATARS, STT_LANGUAGE_LIST } from "@/app/lib/constants";
 
 export default function InteractiveAvatar() {
+  const { t } = useI18n();
   const [isLoadingSession, setIsLoadingSession] = useState(false);
   const [isLoadingRepeat, setIsLoadingRepeat] = useState(false);
   const [stream, setStream] = useState<MediaStream>();
   // const [debug, setDebug] = useState<string>();
-  // const [knowledgeId, setKnowledgeId] = useState<string>('7b5606ccf7154a9ab720c245a247ce78');
-  const [knowledgeBase, setKnowledgeBase] = useState<string>("");
+  // const [knowledgeId, setKnowledgeId] = useState<string>('');
+
+  const [knowledgeBase, setKnowledgeBase] = useState<string>(
+    t("nav.default.prompt"),
+  );
+  const previousDefaultPrompt = useRef(t("nav.default.prompt"));
   const [avatarId, setAvatarId] = useState<string>(
     "6b321163a4ec4ad3a5bdd85f67bf09a1",
   );
   const [language, setLanguage] = useState<string>("zh");
+
+  // 监听语言变化，更新默认提示词
+  useEffect(() => {
+    const newDefaultPrompt = t("nav.default.prompt");
+
+    // 只有当knowledgeBase是之前的默认提示词时才更新
+    if (knowledgeBase === previousDefaultPrompt.current) {
+      setKnowledgeBase(newDefaultPrompt);
+    }
+    previousDefaultPrompt.current = newDefaultPrompt;
+  }, [t, knowledgeBase]);
 
   const [data, setData] = useState<StartAvatarResponse>();
   const [text, setText] = useState<string>("");
@@ -61,7 +71,6 @@ export default function InteractiveAvatar() {
         method: "POST",
       });
 
-      console.log("response", response);
       const token = await response.text();
 
       console.log("Access Token:", token); // Log the token to verify
@@ -77,8 +86,6 @@ export default function InteractiveAvatar() {
   async function startSession() {
     setIsLoadingSession(true);
     const newToken = await fetchAccessToken();
-
-    console.log("newToken", newToken);
 
     avatar.current = new StreamingAvatar({
       token: newToken,
@@ -199,9 +206,7 @@ export default function InteractiveAvatar() {
   }, [mediaStream, stream]);
 
   return (
-    <div
-      className={`${belanosima.className} w-[90vw] sm:w-[800px] mx-auto flex flex-col gap-4`}
-    >
+    <div className="w-[90vw] sm:w-[800px] mx-auto flex flex-col gap-4">
       <Card>
         <CardBody className="flex flex-col items-center p-3 sm:p-5 min-h-[300px]">
           <p className="text-2xl sm:text-4xl font-bold leading-loose text-gray-800 dark:text-gray-200">
@@ -229,7 +234,7 @@ export default function InteractiveAvatar() {
                   variant="shadow"
                   onClick={handleInterrupt}
                 >
-                  Interrupt task
+                  {t("nav.interrupt")}
                 </Button>
                 <Button
                   className="bg-green-400 hover:bg-green-500 text-white rounded-lg text-xs sm:text-sm"
@@ -237,7 +242,7 @@ export default function InteractiveAvatar() {
                   variant="shadow"
                   onClick={endSession}
                 >
-                  End session
+                  {t("nav.end")}
                 </Button>
               </div>
             </div>
@@ -245,7 +250,7 @@ export default function InteractiveAvatar() {
             <div className="h-full justify-center items-center flex flex-col gap-4 sm:gap-8 w-full self-center">
               <div className="flex flex-col gap-4 w-full">
                 <p className="text-sm font-medium leading-none">
-                  Upload files(OPTIONAL)
+                  {t("nav.upload")}
                 </p>
                 <div
                   className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-3 sm:p-4 text-center cursor-pointer hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
@@ -277,10 +282,10 @@ export default function InteractiveAvatar() {
                     </svg>
                     <div className="flex flex-col items-center">
                       <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                        Click or drag files here to upload
+                        {t("nav.upload.tip")}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        Support PDF, PPT format
+                        {t("nav.upload.format")}
                       </p>
                     </div>
                   </div>
@@ -310,17 +315,19 @@ export default function InteractiveAvatar() {
                   />
                 </div>
 
-                <p className="text-sm font-medium leading-none">FULL PROMPT</p>
+                <p className="text-sm font-medium leading-none">
+                  {t("nav.full.prompt")}
+                </p>
                 <Textarea
                   maxRows={10}
                   minRows={5}
-                  placeholder="Enter a custom knowledgeBase"
+                  placeholder={t("nav.prompt.placeholder")}
                   value={knowledgeBase}
                   onChange={(e) => setKnowledgeBase(e.target.value)}
                 />
 
                 <p className="text-sm font-medium leading-none">
-                  CUSTOM AVATAR
+                  {t("nav.select.avatar")}
                 </p>
                 <RadioGroup
                   classNames={{
@@ -364,7 +371,7 @@ export default function InteractiveAvatar() {
                 </RadioGroup>
 
                 <p className="text-sm font-medium leading-none">
-                  SELECT LANGUAGE
+                  {t("nav.select.language")}
                 </p>
                 <RadioGroup
                   className="items-center"
@@ -390,7 +397,7 @@ export default function InteractiveAvatar() {
                 variant="shadow"
                 onClick={startSession}
               >
-                Start session
+                {t("nav.start")}
               </Button>
             </div>
           ) : (
@@ -414,8 +421,8 @@ export default function InteractiveAvatar() {
               handleChangeChatMode(v);
             }}
           >
-            <Tab key="text_mode" title="Text mode" />
-            <Tab key="voice_mode" title="Voice mode" />
+            <Tab key="text_mode" title={t("nav.text.mode")} />
+            <Tab key="voice_mode" title={t("nav.voice.mode")} />
           </Tabs>
           {chatMode === "text_mode" ? (
             <div className="w-full flex relative">
@@ -424,13 +431,13 @@ export default function InteractiveAvatar() {
                 input={text}
                 label=""
                 loading={isLoadingRepeat}
-                placeholder="Type something for the avatar to respond"
+                placeholder={t("nav.input.placeholder")}
                 setInput={setText}
                 onSubmit={handleSpeak}
               />
               {text && (
                 <Chip className="absolute right-16 top-3 bg-green-400 text-white">
-                  Listening
+                  {t("nav.listening")}
                 </Chip>
               )}
             </div>
@@ -442,7 +449,7 @@ export default function InteractiveAvatar() {
                 size="md"
                 variant="shadow"
               >
-                {isUserTalking ? "Listening" : "Voice chat"}
+                {isUserTalking ? t("nav.voice.listening") : t("nav.voice.chat")}
               </Button>
             </div>
           )}
@@ -452,7 +459,9 @@ export default function InteractiveAvatar() {
 
         <div className="w-full p-3 sm:p-5">
           <div className="w-full flex items-center justify-between">
-            <span className="text-sm sm:text-base">OUTPUT REPORT</span>
+            <span className="text-sm sm:text-base">
+              {t("nav.output.report")}
+            </span>
             <Button
               isIconOnly
               className="bg-green-400 hover:bg-green-500 text-white"
@@ -476,13 +485,7 @@ export default function InteractiveAvatar() {
           </div>
 
           <div className="w-full border border-dashed rounded-lg mt-2 p-2">
-            <p className="text-sm">
-              1. Meeting Purpose: Report on the current progress of the project
-              and discuss the problems and challenges encountered. Adjust the
-              project plan to ensure that the goals are completed on time.
-              Determine the focus and responsibility allocation for the next
-              stage.
-            </p>
+            <p className="text-sm" />
           </div>
         </div>
       </Card>

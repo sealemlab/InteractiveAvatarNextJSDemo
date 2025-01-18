@@ -1,8 +1,9 @@
 export const AVATARS = [
   {
     avatar_id: "6b321163a4ec4ad3a5bdd85f67bf09a1",
-    name: "CC",
-    avatar: "https://heroui.com/images/album-cover.png",
+    name: "Sasaki",
+    avatar:
+      "https://files2.heygen.ai/avatar/v3/6b321163a4ec4ad3a5bdd85f67bf09a1/full/2.2/preview_target.webp",
   },
   {
     avatar_id: "SilasHR_public",
