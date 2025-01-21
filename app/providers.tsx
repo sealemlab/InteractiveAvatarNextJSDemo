@@ -5,8 +5,11 @@ import { NextUIProvider } from "@nextui-org/system";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
+import { ConfigProvider } from "antd";
 
 import I18nContext, { Language, messages } from "./lib/i18n";
+
+import theme from "@/theme/themeConfig";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -29,9 +32,11 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   return (
     <NextUIProvider navigate={router.push}>
       <NextThemesProvider {...themeProps}>
-        <I18nContext.Provider value={i18nValue}>
-          {children}
-        </I18nContext.Provider>
+        <ConfigProvider theme={theme}>
+          <I18nContext.Provider value={i18nValue}>
+            {children}
+          </I18nContext.Provider>
+        </ConfigProvider>
       </NextThemesProvider>
     </NextUIProvider>
   );

@@ -1,5 +1,12 @@
 import type { StartAvatarResponse } from "@heygen/streaming-avatar";
+import type { UploadProps } from "antd";
 
+import { Upload, message } from "antd";
+import {
+  InboxOutlined,
+  LoadingOutlined,
+  CheckCircleOutlined,
+} from "@ant-design/icons";
 import StreamingAvatar, {
   AvatarQuality,
   StreamingEvents,
@@ -65,6 +72,92 @@ export default function InteractiveAvatar() {
   const avatar = useRef<StreamingAvatar | null>(null);
   const [chatMode, setChatMode] = useState("text_mode");
   const [isUserTalking, setIsUserTalking] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [sessionSummary, setSessionSummary] = useState<string>("");
+
+  const { Dragger } = Upload;
+
+  const uploadProps: UploadProps = {
+    name: "files",
+    multiple: false,
+    showUploadList: false,
+    accept: ".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg",
+    customRequest: async (options) => {
+      const { file, onSuccess, onError } = options;
+
+      try {
+        setIsUploading(true);
+        setUploadSuccess(false);
+        message.loading({
+          content: t("nav.upload.loading"),
+          key: "uploading",
+          duration: 0,
+        });
+
+        const formData = new FormData();
+
+        formData.append("files", file as File);
+
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Upload failed with status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const resultObj = JSON.parse(data.result);
+        const summary = resultObj.message.result[0].result.output.summary;
+
+        // 更新knowledgeBase，替换项目背景部分
+        const updatedPrompt = knowledgeBase.replace(
+          /\[此处填入当前项目的详细资料\]|\[Insert detailed information about current project here\]/,
+          summary,
+        );
+
+        setKnowledgeBase(updatedPrompt);
+        setUploadSuccess(true);
+        message.success({ content: t("nav.upload.success"), key: "uploading" });
+        onSuccess?.(data);
+      } catch (error) {
+        console.error("Upload error:", error);
+        setUploadSuccess(false);
+        message.error({ content: t("nav.upload.error"), key: "uploading" });
+        onError?.(error as Error);
+      } finally {
+        setIsUploading(false);
+      }
+    },
+    beforeUpload: (file) => {
+      const isValidType = [
+        "application/pdf",
+        "application/vnd.ms-powerpoint",
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.ms-excel",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "image/png",
+        "image/jpeg",
+      ].includes(file.type);
+
+      if (!isValidType) {
+        message.error(t("nav.upload.tip2"));
+
+        return false;
+      }
+
+      // const isLt50M = file.size / 1024 / 1024 < 50;
+      // if (!isLt50M) {
+      //   message.error('文件大小不能超过 50MB!');
+      //   return false;
+      // }
+
+      return true;
+    },
+  };
 
   async function fetchAccessToken() {
     try {
@@ -83,6 +176,25 @@ export default function InteractiveAvatar() {
 
     return "";
   }
+
+  const fetchSessionDetail = async (sessionId: string) => {
+    try {
+      const response = await fetch(
+        `https://api2.heygen.com/v1/streaming/session.detail?session_id=${sessionId}`,
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch session detail: ${response.status}`);
+      }
+      const data = await response.json();
+
+      if (data.summary) {
+        setSessionSummary(data.summary);
+      }
+    } catch (error) {
+      console.error("Error fetching session detail:", error);
+    }
+  };
 
   async function startSession() {
     setIsLoadingSession(true);
@@ -117,17 +229,24 @@ export default function InteractiveAvatar() {
       const res = await avatar.current.createStartAvatar({
         quality: AvatarQuality.Low,
         avatarName: avatarId,
-        knowledgeBase: knowledgeBase, // Or use a custom `knowledgeBase`.
+        knowledgeBase: knowledgeBase,
         voice: {
-          rate: 1.5, // 0.5 ~ 1.5
+          rate: 1.5,
           emotion: VoiceEmotion.EXCITED,
         },
         language: language,
         disableIdleTimeout: true,
       });
 
-      console.log("createStartAvatar", res);
       setData(res);
+      console.log("createStartAvatar", res);
+      console.log("session_id", res.session_id);
+
+      // 获取会话详情
+      if (res.session_id) {
+        fetchSessionDetail(res.session_id);
+      }
+
       // default to voice mode
       await avatar.current?.startVoiceChat({
         useSilencePrompt: false,
@@ -207,45 +326,6 @@ export default function InteractiveAvatar() {
     }
   }, [mediaStream, stream]);
 
-  async function handleFileUpload(file: File) {
-    try {
-      setIsUploading(true);
-      const formData = new FormData();
-
-      formData.append("files", file);
-
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error(`Upload failed with status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      console.log("Upload successful:", data.result);
-
-      // 解析返回的JSON字符串
-      const resultObj = JSON.parse(data.result);
-      const summary = resultObj.message.result[0].result.output.summary;
-
-      // 更新knowledgeBase，替换项目背景部分
-      const updatedPrompt = knowledgeBase.replace(
-        /\[此处填入当前项目的详细资料\]|\[Insert detailed information about current project here\]/,
-        summary,
-      );
-
-      setKnowledgeBase(updatedPrompt);
-    } catch (error) {
-      console.error("Upload error:", error);
-      // 这里可以添加错误提示
-    } finally {
-      setIsUploading(false);
-    }
-  }
-
   return (
     <div className="w-[90vw] sm:w-[800px] mx-auto flex flex-col gap-4">
       <Card>
@@ -293,72 +373,27 @@ export default function InteractiveAvatar() {
                 <p className="text-sm font-medium leading-none">
                   {t("nav.upload")}
                 </p>
-                <div
-                  className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-3 sm:p-4 text-center cursor-pointer hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
-                  role="button"
-                  tabIndex={0}
-                  onClick={() =>
-                    document.getElementById("file-upload")?.click()
-                  }
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === "Space") {
-                      e.preventDefault();
-                      document.getElementById("file-upload")?.click();
-                    }
-                  }}
-                >
-                  <div className="flex flex-col items-center justify-center gap-2">
+                <Dragger {...uploadProps} className="bg-white dark:bg-gray-800">
+                  <p className="ant-upload-drag-icon text-green-400">
                     {isUploading ? (
-                      <Spinner className="text-green-400" size="lg" />
+                      <LoadingOutlined />
+                    ) : uploadSuccess ? (
+                      <CheckCircleOutlined />
                     ) : (
-                      <svg
-                        className="w-6 h-6 sm:w-8 sm:h-8 text-gray-500 dark:text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                        />
-                      </svg>
+                      <InboxOutlined />
                     )}
-                    <div className="flex flex-col items-center">
-                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                        {t("nav.upload.tip")}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {t("nav.upload.format")}
-                      </p>
-                    </div>
-                  </div>
-                  <input
-                    accept=".pdf,.ppt,.pptx"
-                    className="hidden"
-                    id="file-upload"
-                    type="file"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-
-                      if (file) {
-                        const fileType = file.name
-                          .toLowerCase()
-                          .split(".")
-                          .pop();
-
-                        if (!["pdf", "ppt", "pptx"].includes(fileType || "")) {
-                          alert("Please upload a PDF or PPT file");
-                          e.target.value = "";
-
-                          return;
-                        }
-                        handleFileUpload(file);
-                      }
-                    }}
-                  />
-                </div>
+                  </p>
+                  <p className="ant-upload-text text-gray-600 dark:text-gray-300">
+                    {isUploading
+                      ? t("nav.upload.loading")
+                      : uploadSuccess
+                        ? t("nav.upload.success")
+                        : t("nav.upload.tip")}
+                  </p>
+                  <p className="ant-upload-hint text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {t("nav.upload.tip2")}
+                  </p>
+                </Dragger>
 
                 <p className="text-sm font-medium leading-none">
                   {t("nav.full.prompt")}
@@ -504,6 +539,15 @@ export default function InteractiveAvatar() {
 
         <div className="w-full p-3 sm:p-5">
           <div className="w-full flex items-center justify-between">
+            <span className="text-sm sm:text-base">{t("meeting.minutes")}</span>
+          </div>
+          <div className="w-full border border-dashed rounded-lg mt-2 p-2">
+            <p className="text-sm whitespace-pre-wrap">{sessionSummary}</p>
+          </div>
+        </div>
+
+        <div className="w-full p-3 sm:p-5">
+          <div className="w-full flex items-center justify-between">
             <span className="text-sm sm:text-base">
               {t("nav.output.report")}
             </span>
@@ -534,6 +578,7 @@ export default function InteractiveAvatar() {
           </div>
         </div>
       </Card>
+
       {/* <p className="font-mono text-right">
         <span className="font-bold">Console:</span>
         <br />

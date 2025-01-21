@@ -1,4 +1,6 @@
 import "@/styles/globals.css";
+import "antd/dist/reset.css";
+import "@/styles/antd.css";
 import clsx from "clsx";
 import { Metadata, Viewport } from "next";
 import { Belanosima } from "next/font/google";
