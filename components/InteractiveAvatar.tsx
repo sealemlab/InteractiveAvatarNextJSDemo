@@ -95,6 +95,7 @@ export default function InteractiveAvatar() {
         });
 
         const formData = new FormData();
+
         formData.append("files", file as File);
 
         const response = await fetch("/api/upload", {
@@ -144,12 +145,15 @@ export default function InteractiveAvatar() {
 
       if (!isValidType) {
         message.error(t("upload.tip2"));
+
         return false;
       }
 
       const isLt10M = file.size / 1024 / 1024 < 10;
+
       if (!isLt10M) {
         message.error(t("upload.size.limit"));
+
         return false;
       }
 
@@ -182,9 +186,9 @@ export default function InteractiveAvatar() {
         `https://api2.heygen.com/v1/streaming/session.detail?session_id=${sessionId}`,
         {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        }
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
 
       if (!response.ok) {
@@ -552,15 +556,13 @@ export default function InteractiveAvatar() {
 
         <div className="w-full p-3 sm:p-5">
           <div className="w-full flex items-center justify-between">
-            <span className="text-sm sm:text-base">
-              {t("output.report")}
-            </span>
+            <span className="text-sm sm:text-base">{t("output.report")}</span>
             <Button
               isIconOnly
+              aria-label={t("download")}
               className="bg-green-400 hover:bg-green-500 text-white"
               size="sm"
               variant="shadow"
-              aria-label={t("download")}
             >
               <svg
                 className="w-5 h-5"

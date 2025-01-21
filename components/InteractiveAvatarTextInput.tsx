@@ -40,7 +40,7 @@ export default function InteractiveAvatarTextInput({
       endContent={
         <div className="flex flex-row items-center h-full">
           {endContent}
-          <Tooltip content={t("nav.send")}>
+          <Tooltip content={t("send")}>
             {loading ? (
               <Spinner
                 className="text-indigo-300 hover:text-indigo-200"

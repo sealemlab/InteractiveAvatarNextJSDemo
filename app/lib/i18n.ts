@@ -1,33 +1,34 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext } from "react";
 
-export type Language = 'zh' | 'en';
+export type Language = "zh" | "en";
 
 export const messages = {
   zh: {
-    'upload.loading': '上传中...',
-    'upload.tip': '点击或拖拽文件到这里上传',
-    'upload.tip2': '支持 PDF、PPT',
-    'upload.success': '上传成功',
-    'upload.error': '上传失败',
-    'upload.size.limit': '文件大小不能超过 10MB!',
-    'upload.title': '上传文件',
-    'prompt.title': '完整提示词',
-    'prompt.placeholder': '请在此输入提示词...',
-    'avatar.select': '选择虚拟人',
-    'language.select': '选择语言',
-    'start.session': '开始会话',
-    'end.session': '结束会话',
-    interrupt: '打断',
-    'text.mode': '文字模式',
-    'voice.mode': '语音模式',
-    'input.placeholder': '请输入您的消息...',
-    listening: '正在聆听',
-    'voice.listening': '正在聆听...',
-    'voice.chat': '点击说话',
-    'meeting.minutes': '会议记录',
-    'output.report': '输出报告',
-    download: '下载',
-    'default.prompt': `##PERSONA:
+    "upload.loading": "上传中...",
+    "upload.tip": "点击或拖拽文件到这里上传",
+    "upload.tip2": "支持 PDF、PPT",
+    "upload.success": "上传成功",
+    "upload.error": "上传失败",
+    "upload.size.limit": "文件大小不能超过 10MB!",
+    "upload.title": "上传文件",
+    "prompt.title": "完整提示词",
+    "prompt.placeholder": "请在此输入提示词...",
+    "avatar.select": "选择虚拟人",
+    "language.select": "选择语言",
+    "start.session": "开始会话",
+    "end.session": "结束会话",
+    interrupt: "打断",
+    "text.mode": "文字模式",
+    "voice.mode": "语音模式",
+    "input.placeholder": "请输入您的消息...",
+    listening: "正在聆听",
+    "voice.listening": "正在聆听...",
+    "voice.chat": "点击说话",
+    "meeting.minutes": "会议记录",
+    "output.report": "输出报告",
+    download: "下载",
+    send: "发送",
+    "default.prompt": `##PERSONA:
 
 每次回应用户输入时,你必须扮演以下角色:
 
@@ -121,33 +122,34 @@ export const messages = {
 
 ##对话开场:
 
-以强势姿态开场,直接要求项目方用2分钟时间介绍项目和团队核心亮点。`
+以强势姿态开场,直接要求项目方用2分钟时间介绍项目和团队核心亮点。`,
   },
   en: {
-    'upload.loading': 'Uploading...',
-    'upload.tip': 'Click or drag files here to upload',
-    'upload.tip2': 'Only supports PDF, PPT',
-    'upload.success': 'Upload successful',
-    'upload.error': 'Upload failed',
-    'upload.size.limit': 'File size cannot exceed 10MB!',
-    'upload.title': 'Upload Files',
-    'prompt.title': 'Full Prompt',
-    'prompt.placeholder': 'Please enter your prompt here...',
-    'avatar.select': 'Select Avatar',
-    'language.select': 'Select Language',
-    'start.session': 'Start Session',
-    'end.session': 'End Session',
-    interrupt: 'Interrupt',
-    'text.mode': 'Text Mode',
-    'voice.mode': 'Voice Mode',
-    'input.placeholder': 'Please enter your message...',
-    listening: 'Listening',
-    'voice.listening': 'Listening...',
-    'voice.chat': 'Click to speak',
-    'meeting.minutes': 'Meeting Minutes',
-    'output.report': 'Output Report',
-    download: 'Download',
-    'default.prompt': `## PERSONA:
+    "upload.loading": "Uploading...",
+    "upload.tip": "Click or drag files here to upload",
+    "upload.tip2": "Only supports PDF, PPT",
+    "upload.success": "Upload successful",
+    "upload.error": "Upload failed",
+    "upload.size.limit": "File size cannot exceed 10MB!",
+    "upload.title": "Upload Files",
+    "prompt.title": "Full Prompt",
+    "prompt.placeholder": "Please enter your prompt here...",
+    "avatar.select": "Select Avatar",
+    "language.select": "Select Language",
+    "start.session": "Start Session",
+    "end.session": "End Session",
+    interrupt: "Interrupt",
+    "text.mode": "Text Mode",
+    "voice.mode": "Voice Mode",
+    "input.placeholder": "Please enter your message...",
+    listening: "Listening",
+    "voice.listening": "Listening...",
+    "voice.chat": "Click to speak",
+    "meeting.minutes": "Meeting Minutes",
+    "output.report": "Output Report",
+    download: "Download",
+    send: "Send",
+    "default.prompt": `## PERSONA:
 
 When responding to user input, you must play the following role:
 
@@ -241,8 +243,8 @@ Must follow these instructions when conversing with users:
 
 ## Conversation Opening:
 
-Start with an assertive stance, directly asking the project team to introduce their project and team's core highlights in 2 minutes.`
-  }
+Start with an assertive stance, directly asking the project team to introduce their project and team's core highlights in 2 minutes.`,
+  },
 } as const;
 
 export type MessageKey = keyof typeof messages.en;
@@ -252,9 +254,9 @@ const I18nContext = createContext<{
   setLanguage: (lang: Language) => void;
   t: (key: MessageKey) => string;
 }>({
-  language: 'en',
+  language: "en",
   setLanguage: () => {},
-  t: (key) => messages.en[key]
+  t: (key) => messages.en[key],
 });
 
 export const useI18n = () => useContext(I18nContext);
