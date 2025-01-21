@@ -145,15 +145,14 @@ export default function InteractiveAvatar() {
 
       if (!isValidType) {
         message.error(t("nav.upload.tip2"));
-
         return false;
       }
 
-      // const isLt50M = file.size / 1024 / 1024 < 50;
-      // if (!isLt50M) {
-      //   message.error('文件大小不能超过 50MB!');
-      //   return false;
-      // }
+      const isLt10M = file.size / 1024 / 1024 < 10;
+      if (!isLt10M) {
+        message.error('文件大小不能超过 10MB!');
+        return false;
+      }
 
       return true;
     },
@@ -179,8 +178,14 @@ export default function InteractiveAvatar() {
 
   const fetchSessionDetail = async (sessionId: string) => {
     try {
+      const token = await fetchAccessToken();
       const response = await fetch(
         `https://api2.heygen.com/v1/streaming/session.detail?session_id=${sessionId}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
       );
 
       if (!response.ok) {
