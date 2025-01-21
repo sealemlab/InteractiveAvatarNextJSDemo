@@ -18,12 +18,14 @@ export async function POST(req: Request) {
     }
 
     const data = await response.json();
+
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error fetching session detail:", error);
+
     return NextResponse.json(
       { error: "Failed to fetch session detail" },
       { status: 500 },
     );
   }
-} 
+}
