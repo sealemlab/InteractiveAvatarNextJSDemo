@@ -5,12 +5,12 @@ export const AVATARS = [
     avatar:
       "https://files2.heygen.ai/avatar/v3/6b321163a4ec4ad3a5bdd85f67bf09a1/full/2.2/preview_target.webp",
   },
-  {
-    avatar_id: "SilasHR_public",
-    name: "SilasHR_public",
-    avatar:
-      "https://app.requestly.io/delay/5000/https://heroui.com/images/hero-card-complete.jpeg",
-  },
+  // {
+  //   avatar_id: "SilasHR_public",
+  //   name: "SilasHR_public",
+  //   avatar:
+  //     "https://app.requestly.io/delay/5000/https://heroui.com/images/hero-card-complete.jpeg",
+  // },
   // {
   //   avatar_id: "Eric_public_pro2_20230608",
   //   name: "Edward in Blue Shirt",

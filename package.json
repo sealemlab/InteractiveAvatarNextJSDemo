@@ -1,6 +1,6 @@
 {
   "name": "next-app-template",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": true,
   "scripts": {
     "dev": "node_modules/next/dist/bin/next dev -p 6001",
