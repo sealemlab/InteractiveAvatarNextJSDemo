@@ -131,7 +131,9 @@ export default function InteractiveAvatar() {
       }
     },
     beforeUpload: (file) => {
-      const isValidType = [
+      //api2.heygen.com/v1/streaming/session.detail?session_id=541478d7-d3fc-11ef-8e4b-da02d57cbf88
+
+      https: const isValidType = [
         "application/pdf",
         "application/vnd.ms-powerpoint",
         "application/vnd.openxmlformats-officedocument.presentationml.presentation",
@@ -183,6 +185,9 @@ export default function InteractiveAvatar() {
     try {
       const response = await fetch(
         `/api/session-detail?session_id=${sessionId}`,
+        {
+          method: "GET",
+        },
       );
 
       if (!response.ok) {

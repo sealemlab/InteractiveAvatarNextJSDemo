@@ -17,6 +17,9 @@ export async function GET(req: Request) {
     );
 
     if (!response.ok) {
+      const errorText = await response.text();
+
+      console.error("HeyGen API error response:", errorText);
       throw new Error(`Failed to fetch session detail: ${response.status}`);
     }
 
