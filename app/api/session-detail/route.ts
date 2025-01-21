@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+const API_TOKEN = "08e9d508-75ab-4048-a46f-515888fcceb7";
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -14,6 +16,12 @@ export async function GET(req: Request) {
 
     const response = await fetch(
       `https://api2.heygen.com/v1/streaming/session.detail?session_id=${sessionId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${API_TOKEN}`,
+        },
+      },
     );
 
     if (!response.ok) {
