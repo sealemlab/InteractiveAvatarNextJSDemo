@@ -181,15 +181,13 @@ export default function InteractiveAvatar() {
 
   const fetchSessionDetail = async (sessionId: string) => {
     try {
-      const token = await fetchAccessToken();
-      const response = await fetch(
-        `https://api2.heygen.com/v1/streaming/session.detail?session_id=${sessionId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await fetch("/api/session-detail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({ sessionId }),
+      });
 
       if (!response.ok) {
         throw new Error(`Failed to fetch session detail: ${response.status}`);
