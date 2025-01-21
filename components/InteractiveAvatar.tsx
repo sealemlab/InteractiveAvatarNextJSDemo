@@ -81,7 +81,7 @@ export default function InteractiveAvatar() {
     name: "files",
     multiple: false,
     showUploadList: false,
-    accept: ".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg",
+    accept: ".pdf,.ppt,.pptx",
     customRequest: async (options) => {
       const { file, onSuccess, onError } = options;
 

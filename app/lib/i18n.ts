@@ -6,7 +6,7 @@ export const messages = {
   zh: {
     'upload.loading': '上传中...',
     'upload.tip': '点击或拖拽文件到这里上传',
-    'upload.tip2': '支持 PDF、PPT、Word、Excel 和图片文件',
+    'upload.tip2': '支持 PDF、PPT',
     'upload.success': '上传成功',
     'upload.error': '上传失败',
     'upload.size.limit': '文件大小不能超过 10MB!',
@@ -126,7 +126,7 @@ export const messages = {
   en: {
     'upload.loading': 'Uploading...',
     'upload.tip': 'Click or drag files here to upload',
-    'upload.tip2': 'Only supports PDF, PPT, Word, Excel and image files',
+    'upload.tip2': 'Only supports PDF, PPT',
     'upload.success': 'Upload successful',
     'upload.error': 'Upload failed',
     'upload.size.limit': 'File size cannot exceed 10MB!',
