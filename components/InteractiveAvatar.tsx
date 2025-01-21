@@ -131,9 +131,7 @@ export default function InteractiveAvatar() {
       }
     },
     beforeUpload: (file) => {
-      //api2.heygen.com/v1/streaming/session.detail?session_id=541478d7-d3fc-11ef-8e4b-da02d57cbf88
-
-      https: const isValidType = [
+      const isValidType = [
         "application/pdf",
         "application/vnd.ms-powerpoint",
         "application/vnd.openxmlformats-officedocument.presentationml.presentation",
