@@ -181,13 +181,9 @@ export default function InteractiveAvatar() {
 
   const fetchSessionDetail = async (sessionId: string) => {
     try {
-      const response = await fetch("/api/session-detail", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ sessionId }),
-      });
+      const response = await fetch(
+        `/api/session-detail?session_id=${sessionId}`,
+      );
 
       if (!response.ok) {
         throw new Error(`Failed to fetch session detail: ${response.status}`);
