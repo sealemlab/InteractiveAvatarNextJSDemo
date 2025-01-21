@@ -47,9 +47,9 @@ export default function InteractiveAvatar() {
   // const [knowledgeId, setKnowledgeId] = useState<string>('');
 
   const [knowledgeBase, setKnowledgeBase] = useState<string>(
-    t("nav.default.prompt"),
+    t("default.prompt"),
   );
-  const previousDefaultPrompt = useRef(t("nav.default.prompt"));
+  const previousDefaultPrompt = useRef(t("default.prompt"));
   const [avatarId, setAvatarId] = useState<string>(
     "6b321163a4ec4ad3a5bdd85f67bf09a1",
   );
@@ -57,7 +57,7 @@ export default function InteractiveAvatar() {
 
   // 监听语言变化，更新默认提示词
   useEffect(() => {
-    const newDefaultPrompt = t("nav.default.prompt");
+    const newDefaultPrompt = t("default.prompt");
 
     // 只有当knowledgeBase是之前的默认提示词时才更新
     if (knowledgeBase === previousDefaultPrompt.current) {
@@ -89,13 +89,12 @@ export default function InteractiveAvatar() {
         setIsUploading(true);
         setUploadSuccess(false);
         message.loading({
-          content: t("nav.upload.loading"),
+          content: t("upload.loading"),
           key: "uploading",
           duration: 0,
         });
 
         const formData = new FormData();
-
         formData.append("files", file as File);
 
         const response = await fetch("/api/upload", {
@@ -119,12 +118,12 @@ export default function InteractiveAvatar() {
 
         setKnowledgeBase(updatedPrompt);
         setUploadSuccess(true);
-        message.success({ content: t("nav.upload.success"), key: "uploading" });
+        message.success({ content: t("upload.success"), key: "uploading" });
         onSuccess?.(data);
       } catch (error) {
         console.error("Upload error:", error);
         setUploadSuccess(false);
-        message.error({ content: t("nav.upload.error"), key: "uploading" });
+        message.error({ content: t("upload.error"), key: "uploading" });
         onError?.(error as Error);
       } finally {
         setIsUploading(false);
@@ -144,13 +143,13 @@ export default function InteractiveAvatar() {
       ].includes(file.type);
 
       if (!isValidType) {
-        message.error(t("nav.upload.tip2"));
+        message.error(t("upload.tip2"));
         return false;
       }
 
       const isLt10M = file.size / 1024 / 1024 < 10;
       if (!isLt10M) {
-        message.error('文件大小不能超过 10MB!');
+        message.error(t("upload.size.limit"));
         return false;
       }
 
@@ -360,7 +359,7 @@ export default function InteractiveAvatar() {
                   variant="shadow"
                   onClick={handleInterrupt}
                 >
-                  {t("nav.interrupt")}
+                  {t("interrupt")}
                 </Button>
                 <Button
                   className="bg-green-400 hover:bg-green-500 text-white rounded-lg text-xs sm:text-sm"
@@ -368,7 +367,7 @@ export default function InteractiveAvatar() {
                   variant="shadow"
                   onClick={endSession}
                 >
-                  {t("nav.end")}
+                  {t("end.session")}
                 </Button>
               </div>
             </div>
@@ -376,7 +375,7 @@ export default function InteractiveAvatar() {
             <div className="h-full justify-center items-center flex flex-col gap-4 sm:gap-8 w-full self-center">
               <div className="flex flex-col gap-4 w-full">
                 <p className="text-sm font-medium leading-none">
-                  {t("nav.upload")}
+                  {t("upload.title")}
                 </p>
                 <Dragger {...uploadProps} className="bg-white dark:bg-gray-800">
                   <p className="ant-upload-drag-icon text-green-400">
@@ -390,29 +389,29 @@ export default function InteractiveAvatar() {
                   </p>
                   <p className="ant-upload-text text-gray-600 dark:text-gray-300">
                     {isUploading
-                      ? t("nav.upload.loading")
+                      ? t("upload.loading")
                       : uploadSuccess
-                        ? t("nav.upload.success")
-                        : t("nav.upload.tip")}
+                        ? t("upload.success")
+                        : t("upload.tip")}
                   </p>
                   <p className="ant-upload-hint text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {t("nav.upload.tip2")}
+                    {t("upload.tip2")}
                   </p>
                 </Dragger>
 
                 <p className="text-sm font-medium leading-none">
-                  {t("nav.full.prompt")}
+                  {t("prompt.title")}
                 </p>
                 <Textarea
                   maxRows={10}
                   minRows={5}
-                  placeholder={t("nav.prompt.placeholder")}
+                  placeholder={t("prompt.placeholder")}
                   value={knowledgeBase}
                   onChange={(e) => setKnowledgeBase(e.target.value)}
                 />
 
                 <p className="text-sm font-medium leading-none">
-                  {t("nav.select.avatar")}
+                  {t("avatar.select")}
                 </p>
                 <RadioGroup
                   classNames={{
@@ -456,7 +455,7 @@ export default function InteractiveAvatar() {
                 </RadioGroup>
 
                 <p className="text-sm font-medium leading-none">
-                  {t("nav.select.language")}
+                  {t("language.select")}
                 </p>
                 <RadioGroup
                   className="items-center"
@@ -482,7 +481,7 @@ export default function InteractiveAvatar() {
                 variant="shadow"
                 onClick={startSession}
               >
-                {t("nav.start")}
+                {t("start.session")}
               </Button>
             </div>
           ) : (
@@ -506,8 +505,8 @@ export default function InteractiveAvatar() {
               handleChangeChatMode(v);
             }}
           >
-            <Tab key="text_mode" title={t("nav.text.mode")} />
-            <Tab key="voice_mode" title={t("nav.voice.mode")} />
+            <Tab key="text_mode" title={t("text.mode")} />
+            <Tab key="voice_mode" title={t("voice.mode")} />
           </Tabs>
           {chatMode === "text_mode" ? (
             <div className="w-full flex relative">
@@ -516,13 +515,13 @@ export default function InteractiveAvatar() {
                 input={text}
                 label=""
                 loading={isLoadingRepeat}
-                placeholder={t("nav.input.placeholder")}
+                placeholder={t("input.placeholder")}
                 setInput={setText}
                 onSubmit={handleSpeak}
               />
               {text && (
                 <Chip className="absolute right-16 top-3 bg-green-400 text-white">
-                  {t("nav.listening")}
+                  {t("listening")}
                 </Chip>
               )}
             </div>
@@ -534,7 +533,7 @@ export default function InteractiveAvatar() {
                 size="md"
                 variant="shadow"
               >
-                {isUserTalking ? t("nav.voice.listening") : t("nav.voice.chat")}
+                {isUserTalking ? t("voice.listening") : t("voice.chat")}
               </Button>
             </div>
           )}
@@ -554,13 +553,14 @@ export default function InteractiveAvatar() {
         <div className="w-full p-3 sm:p-5">
           <div className="w-full flex items-center justify-between">
             <span className="text-sm sm:text-base">
-              {t("nav.output.report")}
+              {t("output.report")}
             </span>
             <Button
               isIconOnly
               className="bg-green-400 hover:bg-green-500 text-white"
               size="sm"
               variant="shadow"
+              aria-label={t("download")}
             >
               <svg
                 className="w-5 h-5"
