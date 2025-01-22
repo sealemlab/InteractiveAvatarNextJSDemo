@@ -349,9 +349,12 @@ export default function InteractiveAvatar() {
         setGenerateUrl(data.task_result.url);
         setIsGeneratingPPT(false);
         message.success({ content: t("generate.success"), key: "generate" });
-      } else if (data.task_status === "PENDING") {
+      } else if (
+        data.task_status === "PENDING" ||
+        data.task_status === "SENT"
+      ) {
         // 如果任务还在进行中，2秒后继续轮询
-        setTimeout(() => checkTaskStatus(taskId), 2000);
+        setTimeout(() => checkTaskStatus(taskId), 1000 * 15);
       } else {
         // 其他状态都视为失败
         setIsGeneratingPPT(false);
