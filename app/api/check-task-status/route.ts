@@ -19,11 +19,11 @@ export async function GET(req: Request) {
     }
 
     const response = await fetch(
-      `https://api.slidespeak.co/api/v1/task/${taskId}`,
+      `https://api.slidespeak.co/api/v1/task_status/${taskId}`,
       {
         headers: {
           "Content-Type": "application/json",
-          "X-API-Key": KEY,
+          "x-api-key": KEY,
         },
       },
     );
