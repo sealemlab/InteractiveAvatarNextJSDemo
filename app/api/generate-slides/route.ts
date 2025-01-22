@@ -16,7 +16,7 @@ export async function POST(req: Request) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": KEY,
+          "X-API-Key": KEY,
         },
         body: JSON.stringify({
           plain_text: projectSummary,

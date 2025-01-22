@@ -23,7 +23,7 @@ export async function GET(req: Request) {
       {
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": KEY,
+          "X-API-Key": KEY,
         },
       },
     );
