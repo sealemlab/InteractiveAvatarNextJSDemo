@@ -1,29 +1,31 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-const API_URL =
-  "https://us-central.unstract.com/deployment/api/org_kW2BkRoMu28kIR73/testAPI/";
-const API_TOKEN = "08e9d508-75ab-4048-a46f-515888fcceb7";
+const KEY = process.env.UNSTRACT_BEARER_TOKEN;
 
 export async function POST(request: Request) {
   try {
+    if (!KEY) {
+      throw new Error('API key is missing from .env');
+    }
+
     const formData = await request.formData();
-    const file = formData.get("files") as File;
+    const file = formData.get('files') as File;
 
     if (!file) {
-      return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+      return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
     }
 
     const uploadFormData = new FormData();
 
-    uploadFormData.append("files", file);
-    uploadFormData.append("timeout", "300");
+    uploadFormData.append('files', file);
+    uploadFormData.append('timeout', '300');
 
-    const response = await fetch(API_URL, {
-      method: "POST",
+    const response = await fetch('https://us-central.unstract.com/deployment/api/org_kW2BkRoMu28kIR73/testAPI/', {
+      method: 'POST',
       body: uploadFormData,
       headers: {
-        Authorization: `Bearer ${API_TOKEN}`,
-      },
+        Authorization: `Bearer ${KEY}`
+      }
     });
 
     if (!response.ok) {
@@ -34,11 +36,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ result });
   } catch (error) {
-    console.error("Upload error:", error);
+    console.error('Upload error:', error);
 
-    return NextResponse.json(
-      { error: "Failed to upload file" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Failed to upload file' }, { status: 500 });
   }
 }
