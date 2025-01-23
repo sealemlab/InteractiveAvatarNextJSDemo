@@ -1,18 +1,26 @@
-import { Button } from "@nextui-org/react";
+import { Select, Space } from 'antd';
+import { GlobalOutlined } from '@ant-design/icons';
 
-import { useI18n } from "@/app/lib/i18n";
+import { useI18n } from '@/app/lib/i18n';
 
 export default function LanguageSwitch() {
   const { language, setLanguage } = useI18n();
 
   return (
-    <Button
-      className="min-w-12 px-2"
-      size="sm"
-      variant="light"
-      onClick={() => setLanguage(language === "en" ? "zh" : "en")}
-    >
-      {language === "en" ? "中" : "En"}
-    </Button>
+    <Select
+      defaultValue={language}
+      style={{ width: 90 }}
+      onChange={setLanguage}
+      options={[
+        {
+          value: 'zh',
+          label: <Space>中文</Space>
+        },
+        {
+          value: 'en',
+          label: <Space>English</Space>
+        }
+      ]}
+    />
   );
 }
