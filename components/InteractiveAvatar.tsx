@@ -29,7 +29,7 @@ import {
   Radio,
   Image,
 } from "@nextui-org/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, Suspense } from "react";
 import { useMemoizedFn, usePrevious } from "ahooks";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -429,281 +429,288 @@ export default function InteractiveAvatar() {
     }
   }, [searchParams]);
 
+  // 修改事件处理函数，添加下划线前缀表示未使用的参数
+  const handleKeyDown = (_e: React.KeyboardEvent) => {
+    // ... existing code ...
+  };
+
   return (
     <div className="w-[90vw] sm:w-[800px] mx-auto flex flex-col gap-4">
-      <Card>
-        <CardBody className="flex flex-col items-center p-3 sm:p-5 min-h-[300px]">
-          <p className="text-2xl sm:text-4xl font-bold leading-loose text-gray-800 dark:text-gray-200">
-            AIGREE AVATAR DEMO
-          </p>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Card>
+          <CardBody className="flex flex-col items-center p-3 sm:p-5 min-h-[300px]">
+            <p className="text-2xl sm:text-4xl font-bold leading-loose text-gray-800 dark:text-gray-200">
+              AIGREE AVATAR DEMO
+            </p>
 
-          {stream ? (
-            <div className="w-full h-[300px] justify-center items-center flex rounded-lg overflow-hidden">
-              <video
-                ref={mediaStream}
-                autoPlay
-                playsInline
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                }}
-              >
-                <track kind="captions" />
-              </video>
-              <div className="flex flex-col gap-2 absolute bottom-3 right-3">
-                <Button
-                  className="bg-green-400 hover:bg-green-500 text-white rounded-lg text-xs sm:text-sm"
-                  size="sm"
-                  variant="shadow"
-                  onClick={handleInterrupt}
+            {stream ? (
+              <div className="w-full h-[300px] justify-center items-center flex rounded-lg overflow-hidden">
+                <video
+                  ref={mediaStream}
+                  autoPlay
+                  playsInline
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }}
                 >
-                  {t("interrupt")}
-                </Button>
-                <Button
-                  className="bg-green-400 hover:bg-green-500 text-white rounded-lg text-xs sm:text-sm"
-                  size="sm"
-                  variant="shadow"
-                  onClick={endSession}
-                >
-                  {t("end.session")}
-                </Button>
-              </div>
-            </div>
-          ) : !isLoadingSession ? (
-            <div className="h-full justify-center items-center flex flex-col gap-4 sm:gap-8 w-full self-center">
-              <div className="flex flex-col gap-4 w-full">
-                <p className="text-sm font-medium leading-none">
-                  {t("upload.title")}
-                </p>
-                <Dragger {...uploadProps} className="bg-white dark:bg-gray-800">
-                  <p className="ant-upload-drag-icon text-green-400">
-                    {isUploading ? (
-                      <LoadingOutlined />
-                    ) : uploadSuccess ? (
-                      <CheckCircleOutlined />
-                    ) : (
-                      <InboxOutlined />
-                    )}
-                  </p>
-                  <p className="ant-upload-text text-gray-600 dark:text-gray-300">
-                    {isUploading
-                      ? t("upload.loading")
-                      : uploadSuccess
-                        ? t("upload.success")
-                        : t("upload.tip")}
-                  </p>
-                  <p className="ant-upload-hint text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {t("upload.tip2")}
-                  </p>
-                </Dragger>
-
-                <div className="flex justify-between items-center">
-                  <p className="text-sm font-medium leading-none">
-                    {t("prompt.title")}
-                  </p>
+                  <track kind="captions" />
+                </video>
+                <div className="flex flex-col gap-2 absolute bottom-3 right-3">
                   <Button
-                    className="bg-green-400 hover:bg-green-500 text-white"
+                    className="bg-green-400 hover:bg-green-500 text-white rounded-lg text-xs sm:text-sm"
                     size="sm"
                     variant="shadow"
-                    onClick={handleShare}
+                    onClick={handleInterrupt}
                   >
-                    {t("share")}
+                    {t("interrupt")}
+                  </Button>
+                  <Button
+                    className="bg-green-400 hover:bg-green-500 text-white rounded-lg text-xs sm:text-sm"
+                    size="sm"
+                    variant="shadow"
+                    onClick={endSession}
+                  >
+                    {t("end.session")}
                   </Button>
                 </div>
-                <Textarea
-                  maxRows={10}
-                  minRows={5}
-                  placeholder={t("prompt.placeholder")}
-                  value={knowledgeBase}
-                  onChange={(e) => setKnowledgeBase(e.target.value)}
-                />
+              </div>
+            ) : !isLoadingSession ? (
+              <div className="h-full justify-center items-center flex flex-col gap-4 sm:gap-8 w-full self-center">
+                <div className="flex flex-col gap-4 w-full">
+                  <p className="text-sm font-medium leading-none">
+                    {t("upload.title")}
+                  </p>
+                  <Dragger
+                    {...uploadProps}
+                    className="bg-white dark:bg-gray-800"
+                  >
+                    <p className="ant-upload-drag-icon text-green-400">
+                      {isUploading ? (
+                        <LoadingOutlined />
+                      ) : uploadSuccess ? (
+                        <CheckCircleOutlined />
+                      ) : (
+                        <InboxOutlined />
+                      )}
+                    </p>
+                    <p className="ant-upload-text text-gray-600 dark:text-gray-300">
+                      {isUploading
+                        ? t("upload.loading")
+                        : uploadSuccess
+                          ? t("upload.success")
+                          : t("upload.tip")}
+                    </p>
+                    <p className="ant-upload-hint text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      {t("upload.tip2")}
+                    </p>
+                  </Dragger>
 
-                <p className="text-sm font-medium leading-none">
-                  {t("avatar.select")}
-                </p>
-                <RadioGroup
-                  classNames={{
-                    wrapper: "gap-10 justify-center items-center flex-wrap",
-                  }}
-                  color="success"
-                  orientation="horizontal"
-                  value={avatarId}
-                  onValueChange={setAvatarId}
-                >
-                  {AVATARS.map((ava) => (
-                    <div
-                      key={ava.avatar_id}
-                      className="flex flex-col justify-center items-center cursor-pointer"
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => setAvatarId(ava.avatar_id)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === "Space") {
-                          e.preventDefault();
-                          setAvatarId(ava.avatar_id);
-                        }
-                      }}
+                  <div className="flex justify-between items-center">
+                    <p className="text-sm font-medium leading-none">
+                      {t("prompt.title")}
+                    </p>
+                    <Button
+                      className="bg-green-400 hover:bg-green-500 text-white"
+                      size="sm"
+                      variant="shadow"
+                      onClick={handleShare}
                     >
-                      <Image
-                        isBlurred
-                        alt={ava.name}
-                        className="object-cover rounded-lg transition-transform hover:scale-105"
-                        height={100}
-                        src={ava.avatar}
-                        width={100}
-                      />
-                      <Radio
-                        className="text-xs sm:text-sm mt-2"
-                        value={ava.avatar_id}
+                      {t("share")}
+                    </Button>
+                  </div>
+                  <Textarea
+                    maxRows={10}
+                    minRows={5}
+                    placeholder={t("prompt.placeholder")}
+                    value={knowledgeBase}
+                    onChange={(e) => setKnowledgeBase(e.target.value)}
+                  />
+
+                  <p className="text-sm font-medium leading-none">
+                    {t("avatar.select")}
+                  </p>
+                  <RadioGroup
+                    classNames={{
+                      wrapper: "gap-10 justify-center items-center flex-wrap",
+                    }}
+                    color="success"
+                    orientation="horizontal"
+                    value={avatarId}
+                    onValueChange={setAvatarId}
+                  >
+                    {AVATARS.map((ava) => (
+                      <div
+                        key={ava.avatar_id}
+                        className="flex flex-col justify-center items-center cursor-pointer"
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => setAvatarId(ava.avatar_id)}
+                        onKeyDown={handleKeyDown}
                       >
-                        {ava.name}
+                        <Image
+                          isBlurred
+                          alt={ava.name}
+                          className="object-cover rounded-lg transition-transform hover:scale-105"
+                          height={100}
+                          src={ava.avatar}
+                          width={100}
+                        />
+                        <Radio
+                          className="text-xs sm:text-sm mt-2"
+                          value={ava.avatar_id}
+                        >
+                          {ava.name}
+                        </Radio>
+                      </div>
+                    ))}
+                  </RadioGroup>
+
+                  <p className="text-sm font-medium leading-none">
+                    {t("language.select")}
+                  </p>
+                  <RadioGroup
+                    className="items-center"
+                    color="success"
+                    orientation="horizontal"
+                    value={language}
+                    onValueChange={setLanguage}
+                  >
+                    {STT_LANGUAGE_LIST.map((lang) => (
+                      <Radio
+                        key={lang.key}
+                        className="text-xs sm:text-sm"
+                        value={lang.key}
+                      >
+                        {lang.label}
                       </Radio>
-                    </div>
-                  ))}
-                </RadioGroup>
-
-                <p className="text-sm font-medium leading-none">
-                  {t("language.select")}
-                </p>
-                <RadioGroup
-                  className="items-center"
-                  color="success"
-                  orientation="horizontal"
-                  value={language}
-                  onValueChange={setLanguage}
+                    ))}
+                  </RadioGroup>
+                </div>
+                <Button
+                  className="bg-green-400 hover:bg-green-500 w-full text-white text-sm sm:text-base"
+                  size="md"
+                  variant="shadow"
+                  onClick={startSession}
                 >
-                  {STT_LANGUAGE_LIST.map((lang) => (
-                    <Radio
-                      key={lang.key}
-                      className="text-xs sm:text-sm"
-                      value={lang.key}
-                    >
-                      {lang.label}
-                    </Radio>
-                  ))}
-                </RadioGroup>
-              </div>
-              <Button
-                className="bg-green-400 hover:bg-green-500 w-full text-white text-sm sm:text-base"
-                size="md"
-                variant="shadow"
-                onClick={startSession}
-              >
-                {t("start.session")}
-              </Button>
-            </div>
-          ) : (
-            <Spinner className="mt-10" color="success" size="lg" />
-          )}
-        </CardBody>
-
-        <Divider />
-
-        <CardFooter className="flex flex-col items-start gap-4 relative p-3 sm:p-5">
-          <Tabs
-            aria-label="Options"
-            classNames={{
-              tabList: "gap-6",
-              cursor: "bg-green-400",
-              tab: "max-w-fit px-0 h-12",
-            }}
-            selectedKey={chatMode}
-            variant="underlined"
-            onSelectionChange={(v) => {
-              handleChangeChatMode(v);
-            }}
-          >
-            <Tab key="text_mode" title={t("text.mode")} />
-            <Tab key="voice_mode" title={t("voice.mode")} />
-          </Tabs>
-          {chatMode === "text_mode" ? (
-            <div className="w-full flex relative">
-              <InteractiveAvatarTextInput
-                disabled={!stream}
-                input={text}
-                label=""
-                loading={isLoadingRepeat}
-                placeholder={t("input.placeholder")}
-                setInput={setText}
-                onSubmit={handleSpeak}
-              />
-              {text && (
-                <Chip className="absolute right-16 top-3 bg-green-400 text-white">
-                  {t("listening")}
-                </Chip>
-              )}
-            </div>
-          ) : (
-            <div className="w-full text-center">
-              <Button
-                className="bg-green-400 hover:bg-green-500 text-white"
-                isDisabled={!isUserTalking}
-                size="md"
-                variant="shadow"
-              >
-                {isUserTalking ? t("voice.listening") : t("voice.chat")}
-              </Button>
-            </div>
-          )}
-        </CardFooter>
-
-        <hr className="border-dashed" />
-
-        <div className="w-full p-3 sm:p-5">
-          <div className="w-full flex items-center justify-between">
-            <span className="text-sm sm:text-base">{t("meeting.minutes")}</span>
-          </div>
-          <div className="w-full border border-dashed rounded-lg mt-2 p-2">
-            <p className="text-sm whitespace-pre-wrap">{sessionSummary}</p>
-          </div>
-        </div>
-
-        <div className="w-full p-3 sm:p-5">
-          <div className="w-full flex items-center justify-between">
-            <span className="text-sm sm:text-base">{t("output.report")}</span>
-            <Button
-              isIconOnly
-              aria-label={t("download")}
-              className="bg-green-400 hover:bg-green-500 text-white"
-              isDisabled={!generateUrl}
-              isLoading={isGeneratingPPT}
-              size="sm"
-              variant="shadow"
-              onClick={handleDownload}
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-              </svg>
-            </Button>
-          </div>
-
-          <div className="w-full border border-dashed rounded-lg mt-2 p-2">
-            {isGeneratingPPT ? (
-              <div className="flex items-center justify-center p-4">
-                <Spinner color="success" size="sm" />
-                <span className="ml-2 text-sm">{t("generate.loading")}</span>
-              </div>
-            ) : generateUrl ? (
-              <div className="w-full border border-dashed rounded-lg mt-2 p-2">
-                <p className="text-sm whitespace-pre-wrap">{generateUrl}</p>
+                  {t("start.session")}
+                </Button>
               </div>
             ) : (
-              <></>
+              <Spinner className="mt-10" color="success" size="lg" />
             )}
+          </CardBody>
+
+          <Divider />
+
+          <CardFooter className="flex flex-col items-start gap-4 relative p-3 sm:p-5">
+            <Tabs
+              aria-label="Options"
+              classNames={{
+                tabList: "gap-6",
+                cursor: "bg-green-400",
+                tab: "max-w-fit px-0 h-12",
+              }}
+              selectedKey={chatMode}
+              variant="underlined"
+              onSelectionChange={(v) => {
+                handleChangeChatMode(v);
+              }}
+            >
+              <Tab key="text_mode" title={t("text.mode")} />
+              <Tab key="voice_mode" title={t("voice.mode")} />
+            </Tabs>
+            {chatMode === "text_mode" ? (
+              <div className="w-full flex relative">
+                <InteractiveAvatarTextInput
+                  disabled={!stream}
+                  input={text}
+                  label=""
+                  loading={isLoadingRepeat}
+                  placeholder={t("input.placeholder")}
+                  setInput={setText}
+                  onSubmit={handleSpeak}
+                />
+                {text && (
+                  <Chip className="absolute right-16 top-3 bg-green-400 text-white">
+                    {t("listening")}
+                  </Chip>
+                )}
+              </div>
+            ) : (
+              <div className="w-full text-center">
+                <Button
+                  className="bg-green-400 hover:bg-green-500 text-white"
+                  isDisabled={!isUserTalking}
+                  size="md"
+                  variant="shadow"
+                >
+                  {isUserTalking ? t("voice.listening") : t("voice.chat")}
+                </Button>
+              </div>
+            )}
+          </CardFooter>
+
+          <hr className="border-dashed" />
+
+          <div className="w-full p-3 sm:p-5">
+            <div className="w-full flex items-center justify-between">
+              <span className="text-sm sm:text-base">
+                {t("meeting.minutes")}
+              </span>
+            </div>
+            <div className="w-full border border-dashed rounded-lg mt-2 p-2">
+              <p className="text-sm whitespace-pre-wrap">{sessionSummary}</p>
+            </div>
           </div>
-        </div>
-      </Card>
+
+          <div className="w-full p-3 sm:p-5">
+            <div className="w-full flex items-center justify-between">
+              <span className="text-sm sm:text-base">{t("output.report")}</span>
+              <Button
+                isIconOnly
+                aria-label={t("download")}
+                className="bg-green-400 hover:bg-green-500 text-white"
+                isDisabled={!generateUrl}
+                isLoading={isGeneratingPPT}
+                size="sm"
+                variant="shadow"
+                onClick={handleDownload}
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                  />
+                </svg>
+              </Button>
+            </div>
+
+            <div className="w-full border border-dashed rounded-lg mt-2 p-2">
+              {isGeneratingPPT ? (
+                <div className="flex items-center justify-center p-4">
+                  <Spinner color="success" size="sm" />
+                  <span className="ml-2 text-sm">{t("generate.loading")}</span>
+                </div>
+              ) : generateUrl ? (
+                <div className="w-full border border-dashed rounded-lg mt-2 p-2">
+                  <p className="text-sm whitespace-pre-wrap">{generateUrl}</p>
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+          </div>
+        </Card>
+      </Suspense>
 
       {/* <p className="font-mono text-right">
         <span className="font-bold">Console:</span>
