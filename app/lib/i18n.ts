@@ -128,6 +128,8 @@ export const messages = {
 以专业友善的态度开场,请项目方用2-3分钟时间介绍项目愿景和核心价值。`,
     share: "分享提示词",
     "share.success": "链接已复制到剪贴板",
+    "share.error": "分享失败",
+    "share.load.error": "加载分享内容失败",
   },
   en: {
     "upload.loading": "Uploading...",
@@ -254,6 +256,8 @@ Must follow these instructions when conversing with users:
 Start professionally and friendly, asking the project team to introduce their project vision and core value in 2-3 minutes.`,
     share: "Share prompt",
     "share.success": "Link copied to clipboard",
+    "share.error": "Share failed",
+    "share.load.error": "Failed to load shared content",
   },
 } as const;
 
