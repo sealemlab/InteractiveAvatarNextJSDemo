@@ -126,7 +126,7 @@ export const messages = {
 ##对话开场:
 
 以专业友善的态度开场,请项目方用2-3分钟时间介绍项目愿景和核心价值。`,
-    "share": "分享提示词",
+    share: "分享提示词",
     "share.success": "链接已复制到剪贴板",
   },
   en: {
@@ -252,7 +252,7 @@ Must follow these instructions when conversing with users:
 ##Conversation Opening:
 
 Start professionally and friendly, asking the project team to introduce their project vision and core value in 2-3 minutes.`,
-    "share": "Share prompt",
+    share: "Share prompt",
     "share.success": "Link copied to clipboard",
   },
 } as const;

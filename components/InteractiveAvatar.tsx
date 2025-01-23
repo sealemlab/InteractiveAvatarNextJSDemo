@@ -407,22 +407,24 @@ export default function InteractiveAvatar() {
     const encodedPrompt = btoa(encodeURIComponent(knowledgeBase));
     const currentUrl = window.location.origin + window.location.pathname;
     const shareUrl = `${currentUrl}?prompt=${encodedPrompt}`;
-    
+
     // 复制到剪贴板
     navigator.clipboard.writeText(shareUrl).then(() => {
-      message.success({ content: t('share.success'), key: 'share' });
+      message.success({ content: t("share.success"), key: "share" });
     });
   };
 
   // 从 URL 参数中读取 prompt
   useEffect(() => {
-    const promptParam = searchParams.get('prompt');
+    const promptParam = searchParams.get("prompt");
+
     if (promptParam) {
       try {
         const decodedPrompt = decodeURIComponent(atob(promptParam));
+
         setKnowledgeBase(decodedPrompt);
       } catch (error) {
-        console.error('Error decoding prompt:', error);
+        console.error("Error decoding prompt:", error);
       }
     }
   }, [searchParams]);

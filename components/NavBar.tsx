@@ -1,9 +1,15 @@
-'use client';
+"use client";
 
-import { Link, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/react';
+import {
+  Link,
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+} from "@nextui-org/react";
 
-import { AigreeLogo } from './Icons';
-import LanguageSwitch from './LanguageSwitch';
+import { AigreeLogo } from "./Icons";
+import LanguageSwitch from "./LanguageSwitch";
 
 export default function NavBar() {
   return (
