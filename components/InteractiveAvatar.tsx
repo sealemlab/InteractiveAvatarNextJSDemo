@@ -31,6 +31,7 @@ import {
 } from "@nextui-org/react";
 import { useEffect, useRef, useState } from "react";
 import { useMemoizedFn, usePrevious } from "ahooks";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import InteractiveAvatarTextInput from "./InteractiveAvatarTextInput";
 
@@ -38,6 +39,8 @@ import { useI18n } from "@/app/lib/i18n";
 import { AVATARS, STT_LANGUAGE_LIST } from "@/app/lib/constants";
 
 export default function InteractiveAvatar() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { t } = useI18n();
   const [isLoadingSession, setIsLoadingSession] = useState(false);
   const [isLoadingRepeat, setIsLoadingRepeat] = useState(false);
@@ -399,6 +402,31 @@ export default function InteractiveAvatar() {
     }
   };
 
+  // 处理分享
+  const handleShare = () => {
+    const encodedPrompt = btoa(encodeURIComponent(knowledgeBase));
+    const currentUrl = window.location.origin + window.location.pathname;
+    const shareUrl = `${currentUrl}?prompt=${encodedPrompt}`;
+    
+    // 复制到剪贴板
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      message.success({ content: t('share.success'), key: 'share' });
+    });
+  };
+
+  // 从 URL 参数中读取 prompt
+  useEffect(() => {
+    const promptParam = searchParams.get('prompt');
+    if (promptParam) {
+      try {
+        const decodedPrompt = decodeURIComponent(atob(promptParam));
+        setKnowledgeBase(decodedPrompt);
+      } catch (error) {
+        console.error('Error decoding prompt:', error);
+      }
+    }
+  }, [searchParams]);
+
   return (
     <div className="w-[90vw] sm:w-[800px] mx-auto flex flex-col gap-4">
       <Card>
@@ -468,9 +496,19 @@ export default function InteractiveAvatar() {
                   </p>
                 </Dragger>
 
-                <p className="text-sm font-medium leading-none">
-                  {t("prompt.title")}
-                </p>
+                <div className="flex justify-between items-center">
+                  <p className="text-sm font-medium leading-none">
+                    {t("prompt.title")}
+                  </p>
+                  <Button
+                    className="bg-green-400 hover:bg-green-500 text-white"
+                    size="sm"
+                    variant="shadow"
+                    onClick={handleShare}
+                  >
+                    {t("share")}
+                  </Button>
+                </div>
                 <Textarea
                   maxRows={10}
                   minRows={5}
