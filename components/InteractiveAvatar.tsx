@@ -32,6 +32,10 @@ import {
 import { useEffect, useRef, useState, Suspense } from "react";
 import { useMemoizedFn, usePrevious } from "ahooks";
 import { useRouter, useSearchParams } from "next/navigation";
+import {
+  compressToEncodedURIComponent,
+  decompressFromEncodedURIComponent,
+} from "lz-string";
 
 import InteractiveAvatarTextInput from "./InteractiveAvatarTextInput";
 
@@ -404,30 +408,39 @@ export default function InteractiveAvatar() {
 
   // 处理分享
   const handleShare = () => {
-    const encodedPrompt = btoa(encodeURIComponent(knowledgeBase));
-    const currentUrl = window.location.origin + window.location.pathname;
-    const shareUrl = `${currentUrl}?prompt=${encodedPrompt}`;
+    try {
+      const compressedPrompt = compressToEncodedURIComponent(knowledgeBase);
+      const currentUrl = window.location.origin + window.location.pathname;
+      const shareUrl = `${currentUrl}?p=${compressedPrompt}`;
 
-    // 复制到剪贴板
-    navigator.clipboard.writeText(shareUrl).then(() => {
-      message.success({ content: t("share.success"), key: "share" });
-    });
+      // 复制到剪贴板
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        message.success({ content: t("share.success"), key: "share" });
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
+      message.error({ content: t("share.error"), key: "share" });
+    }
   };
 
-  // 从 URL 参数中读取 prompt
+  // 从 URL 参数中读取分享内容
   useEffect(() => {
-    const promptParam = searchParams.get("prompt");
+    const compressedPrompt = searchParams.get("p");
 
-    if (promptParam) {
+    if (compressedPrompt) {
       try {
-        const decodedPrompt = decodeURIComponent(atob(promptParam));
+        const decompressedPrompt =
+          decompressFromEncodedURIComponent(compressedPrompt);
 
-        setKnowledgeBase(decodedPrompt);
+        if (decompressedPrompt) {
+          setKnowledgeBase(decompressedPrompt);
+        }
       } catch (error) {
         console.error("Error decoding prompt:", error);
+        message.error({ content: t("share.error"), key: "share" });
       }
     }
-  }, [searchParams]);
+  }, [searchParams, t]);
 
   // 修改事件处理函数，添加下划线前缀表示未使用的参数
   const handleKeyDown = (_e: React.KeyboardEvent) => {
