@@ -27,7 +27,6 @@ export async function POST(request: Request) {
         Authorization: `Bearer ${KEY}`
       }
     });
-    console.log('unstract', response);
 
     if (!response.ok) {
       throw new Error(`Upload failed with status: ${response.status}`);

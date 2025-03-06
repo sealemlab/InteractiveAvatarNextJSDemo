@@ -113,13 +113,14 @@ export default function InteractiveAvatar() {
           body: formData,
         });
 
-        console.log("upload", response);
         if (!response.ok) {
           throw new Error(`Upload failed with status: ${response.status}`);
         }
-
+        
         const data = await response.json();
+        console.log("upload", data);
         const resultObj = JSON.parse(data.result);
+        console.log("resultObj", resultObj);
         const summary = resultObj.message.result[0].result.output.summary;
 
         setPorjectSummary(summary);
