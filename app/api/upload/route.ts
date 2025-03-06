@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     uploadFormData.append("timeout", "300");
 
     const response = await fetch(
-      "https://us-central.unstract.com/deployment/api/org_kW2BkRoMu28kIR73/testAPI/",
+      "https://us-central.unstract.com/deployment/api/org_EWKLd4j8vhtgVURx/co2-upload/",
       {
         method: "POST",
         body: uploadFormData,
