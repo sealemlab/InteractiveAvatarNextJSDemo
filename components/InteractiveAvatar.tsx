@@ -113,6 +113,7 @@ export default function InteractiveAvatar() {
           body: formData,
         });
 
+        console.log("upload", response);
         if (!response.ok) {
           throw new Error(`Upload failed with status: ${response.status}`);
         }
